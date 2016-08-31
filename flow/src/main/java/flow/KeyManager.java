@@ -77,10 +77,10 @@ class KeyManager {
   void setUp(Object key) {
     Services parent = managedServices.get(ROOT_KEY).services;
     if (key instanceof MultiKey) {
+      ensureNode(parent, key).uses++;
       for (Object part : ((MultiKey) key).getKeys()) {
         setUp(part);
       }
-      ensureNode(parent, key).uses++;
     } else if (key instanceof TreeKey) {
       TreeKey treeKey = (TreeKey) key;
       final Object parentKey = treeKey.getParentKey();
@@ -128,6 +128,9 @@ class KeyManager {
 
   private boolean decrementAndMaybeRemoveKey(Object key) {
     ManagedServices node = managedServices.get(key);
+    if (node == null) {
+        return;
+    }
     node.uses--;
     if (key != ROOT_KEY && node.uses == 0) {
       int count = servicesFactories.size();

@@ -129,7 +129,7 @@ class KeyManager {
   private boolean decrementAndMaybeRemoveKey(Object key) {
     ManagedServices node = managedServices.get(key);
     if (node == null) {
-        return;
+        return false;
     }
     node.uses--;
     if (key != ROOT_KEY && node.uses == 0) {
